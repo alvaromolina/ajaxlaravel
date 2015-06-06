@@ -12,6 +12,7 @@
 */
 
 Route::get('/', 'MoviesController@index');
+Route::get('/home', 'MoviesController@index');
 
 Route::resource('movies','MoviesController');
 Route::resource('reviews','ReviewsController');
