@@ -17,6 +17,7 @@ Route::get('/home', 'MoviesController@index');
 Route::resource('movies','MoviesController');
 Route::resource('reviews','ReviewsController');
 Route::resource('ratings','RatingsController');
+Route::resource('likes','LikesController');
 
 
 Route::controllers([

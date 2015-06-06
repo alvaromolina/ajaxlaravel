@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Movie extends Model {
 
-	protected $fillable = ['name', 'description'];
+	protected $fillable = ['name', 'description', 'category'];
 
 	public function user(){
 		return $this->belongsTo('App\User');
@@ -22,4 +22,9 @@ class Movie extends Model {
 		return $this->ratings()->avg('value');
 	}
 
+	public function rated(User $user){
+		$count = Rating::where('user_id',$user->id)->where('movie_id', $this->id)->count();
+		return ($count > 0);
+	}
+	
 }

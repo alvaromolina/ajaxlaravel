@@ -4,6 +4,7 @@ Vista de movies:
 	<h1>Movies</h1>
 	@foreach ($movies as $movie)
 		<h2><a href="/movies/{{$movie->id}}">{{$movie->name}}</a></h2>
+		<h3>Categoria: {{$movie->category}}</h3>
 		<p>{{$movie->description}}</p>
 		<a href="/movies/{{$movie->id}}/edit">Editar</a>
 		{!! Form::open(array('route' => array('movies.destroy', $movie->id), 'method' => 'delete')) !!}

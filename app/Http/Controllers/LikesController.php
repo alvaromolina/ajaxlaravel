@@ -2,12 +2,14 @@
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Rating;
-use App\Movie;
-use Auth;
-use App\Http\Requests\RatingRequest;
 
-class RatingsController extends Controller {
+use Request;
+use App\Like;
+use App\Review;
+
+use Auth;
+
+class LikesController extends Controller {
 
 	/**
 	 * Display a listing of the resource.
@@ -29,18 +31,20 @@ class RatingsController extends Controller {
 		//
 	}
 
-	public function store(RatingRequest $request)
+	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @return Response
+	 */
+	public function store(Request $request)
 	{
-		$input = $request->all();
-		$movie = Movie::find($input['movie_id']);
-		//if(! $movie->rated(Auth::user())){
-			$review = new Rating($input);
-			Auth::user()->reviews()->save($review);
-		//}
-		return redirect('movies/'.$input['movie_id']);
+		$input = $request::all();
 
+		$like = new Like($input);
+		$review = Review::find($input['review_id']);
+		Auth::user()->likes()->save($like);
+		return redirect('movies/'.$review->movie_id);
 	}
-
 
 	/**
 	 * Display the specified resource.
@@ -83,7 +87,10 @@ class RatingsController extends Controller {
 	 */
 	public function destroy($id)
 	{
-		//
+		$like = Like::find($id);
+		$review = Review::find($like->review_id);
+		Like::destroy($id);
+		return redirect('movies/'.$review->movie_id);
 	}
 
 }
