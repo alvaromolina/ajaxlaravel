@@ -1,9 +1,9 @@
 @extends('layout')
 @section('content')
 	<h2>{{$movie->name}}</h2>
+	<img src="{{ ($movie->image == null) ? '/uploads/15707.jpg' : $movie->image}}" alt="">
 	<h2><b>Categoria:</b>{{$movie->category}}</h2>
 	<p>{{$movie->description}}</p>
-
 	<h3>Rating: {{$movie->averageRating()}}</h3>
 	{!! Form::open(['url'=>'ratings']) !!}
 	<br>
@@ -13,31 +13,16 @@
 	<br><br>
 	{!! Form::submit('Rate!') !!}
 	{!! Form::close() !!}
-
 	<h3>Reviews:</h3>
+	<div id="reviews">
 	@foreach ($movie->reviews as $review)
-		{{$review->content}}
-		<br>
-		<b>Por:</b>{{$review->user->name}}
-		<br>
-		<b>Likes:</b> {{$review->likes()->count()}}
-		@if ($review->liked(Auth::user()))
-			{!! Form::open(array('route' => array('likes.destroy', $review->userLike(Auth::user())->id), 'method' => 'delete')) !!}
-			<button type="submit" class="btn btn-danger btn-mini">Unlike</button>
-			{!! Form::close() !!}
-		@else
-		{!! Form::open(['url'=>'likes']) !!}
-		<br>
-		{!! Form::hidden('review_id',$review->id) !!}
-		<br><br>
-		{!! Form::submit('Like') !!}
-		{!! Form::close() !!}
-		@endif
+		@include ('reviews.show', ['review' => $review])
 	@endforeach
-	{!! Form::open(['url'=>'reviews']) !!}
+	</div>
+	{!! Form::open(['url'=>'reviews', 'class' => 'reviewForm']) !!}
 	<br>
 	{!! Form::label('name','Comentario:') !!}
-	{!! Form::text('content') !!}
+	{!! Form::text('content', '' , ['id' => 'contenido']) !!}
 	{!! Form::hidden('movie_id',$movie->id) !!}
 	<br><br>
 	{!! Form::submit('Guardar') !!}
@@ -48,4 +33,32 @@
 			{{$error}}
 		@endforeach
 	@endif
+
+	<script>
+
+		$(document).ready( function( ) {
+		    $( '.reviewForm' ).on( 'submit', function(e) {
+		        e.preventDefault();
+
+		        var content = $(this).find('input[name=content]').val();
+        		var movie_id = $(this).find('input[name=movie_id]').val();
+  
+		   		$.ajax({
+		            type: "POST",
+		            url: '/reviews',
+		            data: {content: content, movie_id: movie_id},
+		            success: function( review ) {
+		            	$('#reviews').append(review);
+		            	//alert(review.content);
+		            }
+		        });
+
+
+		    });
+		});
+
+
+
+	</script>
+
 @stop

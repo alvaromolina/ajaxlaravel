@@ -34,7 +34,8 @@ class ReviewsController extends Controller {
 		$input = $request->all();
 		$review = new Review($input);
 		Auth::user()->reviews()->save($review);
-		return redirect('movies/'.$input['movie_id']);
+		return view('reviews.show', compact('review'));
+		//return redirect('movies/'.$input['movie_id']);
 	}
 
 	/**
@@ -45,7 +46,8 @@ class ReviewsController extends Controller {
 	 */
 	public function show($id)
 	{
-		//
+		$review = Review::find($id);
+		return $review;
 	}
 
 	/**

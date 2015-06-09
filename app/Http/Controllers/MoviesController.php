@@ -42,9 +42,15 @@ class MoviesController extends Controller {
 	public function store(MovieRequest $request)
 	{
 
-
+		if ($request->file('image')->isValid()){
+			 $extension = $request->file('image')->getClientOriginalExtension();
+			 $fileName = rand(11111,99999).'.'.$extension;
+			 $request->file('image')->move("uploads/", $fileName);
+		}
 		$input = $request->all();
-		Movie::create($input);
+		$input["image"] = "/uploads/".$fileName;
+		$movie = Movie::create($input);
+
 		/*
 		$movie = new Movie($input);
 		Auth::user()->movies()->save($movie);

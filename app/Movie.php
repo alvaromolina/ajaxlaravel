@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Movie extends Model {
 
-	protected $fillable = ['name', 'description', 'category'];
+	protected $fillable = ['name', 'description', 'category', 'image'];
 
 	public function user(){
 		return $this->belongsTo('App\User');
